@@ -1,0 +1,43 @@
+services:
+  orchestrator:
+    build:
+      context: .  # Caminho para a aplicação host
+    ports:
+      - "9000:9000"
+    environment:
+      - REACT_APP_HOST_URL=http://orchestrator:9000
+      - REACT_APP_ACCOUNT_URL=http://account:8500
+      - REACT_APP_HOME_URL=http://home:8200
+      - REACT_APP_DASHBOARD_URL=http://dashboard:8300
+    networks:
+      - app-network
+    depends_on:
+      - home  # Garante que o "home" suba antes do orchestrator
+
+  home:
+    build:
+      context: ../home  # Caminho para a pasta do microfrontend home
+    ports:
+      - "8200:8200"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+  # account:
+  #   build:
+  #     context: ../account  # Caminho para a pasta do microfrontend account
+  #   ports:
+  #     - "8500:8500"
+  #   networks:
+  #     - app-network
+
+  # dashboard:
+  #   build:
+  #     context: ../dashboard  # Caminho para a pasta do microfrontend dashboard
+  #   ports:
+  #     - "8300:8300"
+  #   networks:
+  #     - app-network
