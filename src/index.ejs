@@ -33,24 +33,11 @@
       {
         "imports": {
           "@bytebank/root-config": "<%= htmlWebpackPlugin.options.REACT_APP_HOST_URL %>/bytebank-root-config.js",
-          "@bytebank/account": "<%= htmlWebpackPlugin.options.REACT_APP_ACCOUNT_URL %>/bytebank-account.js",
-          "@bytebank/home": "http://localhost:8200/bytebank-home.js",
-          "@bytebank/dashboard": "<%= htmlWebpackPlugin.options.REACT_APP_DASHBOARD_URL %>/bytebank-dashboard.js"
+          "@bytebank/home": "<%= htmlWebpackPlugin.REACT_APP_HOME_URL || 'http://localhost:8200' %>/bytebank-home.js"
+
         }
       }
     </script>
-    <!-- <script type="systemjs-importmap">
-      {
-        "imports": {
-          "@single-spa/welcome": "https://unpkg.com/single-spa-welcome/dist/single-spa-welcome.js",
-          "@bytebank/root-config": "<%= process.env.REACT_APP_HOST_URL || 'http://localhost:9000' %>/bytebank-root-config.js",
-          "@bytebank/home": "<%= process.env.REACT_APP_HOME_URL || 'http://localhost:8200' %>/bytebank-home.js",
-          "@bytebank/account": "<%= process.env.REACT_APP_ACCOUNT_URL || 'http://localhost:8500' %>/bytebank-account.js",
-          "@bytebank/dashboard": "<%= process.env.REACT_APP_DASHBOARD_URL || 'http://localhost:8300' %>/bytebank-dashboard.js" 
-        }
-      }
-    </script> -->
-    
   <% } %>
       
 
