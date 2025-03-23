@@ -1,0 +1,81 @@
+# Projeto: Orchestrator com Microfrontends e Backend
+
+## Visão Geral
+Este projeto utiliza Docker Compose para orquestrar um ambiente de microfrontends e um backend. A estrutura inclui um `orchestrator`, um microfrontend `home`, um backend `tech-challenge` e um banco de dados MongoDB.
+
+## Arquitetura dos Serviços
+O `docker-compose.yml` define os seguintes serviços:
+
+### 1. Orchestrator
+Este é o aplicativo principal que carrega os microfrontends.
+- **Contexto de Build**: Diretório atual (`.`).
+- **Portas**: Mapeia `9000` do contêiner para `9000` da máquina host.
+- **Variáveis de Ambiente**:
+  - `REACT_APP_HOST_URL`: URL do próprio orchestrator.
+  - `REACT_APP_HOME_URL`: URL do microfrontend `home`.
+  - `REACT_APP_API_URL`: URL do backend `tech-challenge`.
+- **Rede**: `app-network`.
+- **Dependências**:
+  - `home` (deve estar disponível antes da inicialização).
+  - `tech-challenge` (deve estar disponível antes da inicialização).
+
+### 2. Home
+Microfrontend independente.
+- **Contexto de Build**: Diretório `../home`.
+- **Portas**: Mapeia `8200` do contêiner para `8200` da máquina host.
+- **Rede**: `app-network`.
+
+### 3. Tech Challenge (Backend)
+API responsável pela lógica de negócios.
+- **Contexto de Build**: Diretório `../tech-challenge-2`.
+- **Portas**: Mapeia `3000` do contêiner para `3000` da máquina host.
+- **Variáveis de Ambiente**:
+  - `MONGO_URI`: URL de conexão com o MongoDB.
+- **Rede**: `app-network`.
+- **Dependências**:
+  - `mongo` (o banco de dados deve estar disponível antes da inicialização).
+
+### 4. MongoDB
+Banco de dados NoSQL para persistência de dados.
+- **Imagem**: `mongo:6.0`.
+- **Nome do contêiner**: `mongo`.
+- **Portas**: Mapeia `27017` do contêiner para `27017` da máquina host.
+- **Rede**: `app-network`.
+- **Volumes**: Persistência de dados em `mongo-data`.
+
+## Rede
+Todos os serviços compartilham a rede `app-network`, permitindo comunicação entre eles.
+
+## Volumes
+- `mongo-data`: Armazena dados do MongoDB para persistência entre reinicializações.
+
+## Como Rodar o Projeto
+1. Certifique-se de ter o Docker e Docker Compose instalados.
+2. No diretório raiz do projeto, execute:
+   ```sh
+   docker compose up -d
+   ```
+3. Os serviços serão iniciados em segundo plano.
+4. Para verificar os logs:
+   ```sh
+   docker compose logs -f
+   ```
+5. Para parar os contêineres:
+   ```sh
+   docker compose down
+   ```
+
+## Acesso aos Serviços
+- **Orchestrator**: [http://localhost:9000](http://localhost:9000)
+- **Home**: [http://localhost:8200](http://localhost:8200)
+- **API Backend**: [http://localhost:3000](http://localhost:3000)
+- **MongoDB**: `mongodb://localhost:27017/tech-challenge`
+
+## Considerações
+- Certifique-se de que os diretórios `../home` e `../tech-challenge-2` contenham os códigos das respectivas aplicações.
+- Caso algum serviço falhe ao iniciar, utilize `docker compose logs <nome_do_serviço>` para investigar.
+- Para remover todos os contêineres e volumes:
+  ```sh
+  docker compose down -v
+  ```
+
